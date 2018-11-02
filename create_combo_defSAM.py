@@ -7,19 +7,20 @@ def print_usage():
     print "Usage: make_draining_def.py"
 
 def listfiles():
-    filelists = [[] for _ in range(100)]
-    with open("TWILIGHT_files_Non_Processed.txt","r+") as f1:
+    filelists = [[] for _ in range(10)]
+    with open("TWILIGHT_snapshotID.txt","r+") as f1:
         for i, line in enumerate(f1):
-           filelists[i % 100].append(line)
+            data = str(line.split(';')[0])
+            filelists[i % 10].append(data)
     f1.close()
     return filelists
 
-snapshotid = open("TWILIGHT_snapshotID.txt","w")
+snapshotid = open("TWILIGHT_combo_snapshotID.txt","w")
 
 sam = swc.SAMWebClient("nova") 
-for j in range (100):
-    defname = 'crisprin_draining_dataset_TWILIGHT_'+str(j)+'_oct2018_new'
-    dimension = " or ".join( ["file_name %s" % f for f in listfiles()[j] ] )  
+for j in range (10):
+    defname ="crisprin_TWILIGHT_draining_"+str(j)+"batch_oct2018_new"     
+    dimension =" or ".join( ["dataset_def_name_newest_snapshot %s" % f for f in listfiles()[j] ] )
 
 
     sam.createDefinition(defname, dimension)
