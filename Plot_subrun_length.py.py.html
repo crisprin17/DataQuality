@@ -1,0 +1,106 @@
+
+# coding: utf-8
+
+# In[3]:
+
+
+get_ipython().run_line_magic('matplotlib', 'notebook')
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import csv
+import random
+from collections import Counter
+plt.style.use('classic')
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+
+# In[5]:
+
+
+with open('/Users/cristiana/Desktop/UpMu_dq/livetimeListNIGHT.txt','r',encoding='utf8') as txtfile:
+    subtime = []
+    runPlus = []
+    runMinus= []
+    for row in csv.reader(txtfile, delimiter = ' '):
+        subtime.append(int(row[4]))
+        if (int(row[4])>185):
+            runPlus.append(int(row[0]))
+        else:
+            runMinus.append(int(row[0]))
+
+
+# In[4]:
+
+
+max_value = max(subtime)
+min_value = min(subtime)
+ax = plt.axes()
+plt.xlabel("time range (s)")
+plt.ylabel("Entries")
+plt.title("Distribution of Subrun length")
+plt.hist(subtime,range(min_value,240))
+ax.xaxis.set_major_locator(plt.MaxNLocator())
+plt.show()
+
+
+
+
+# In[8]:
+
+
+max_valueP = max(runPlus)
+min_valueP = min(runPlus)
+ax = plt.axes()
+plt.xlabel("Run")
+plt.ylabel("Entries")
+plt.title("Distribution of Run for subrun length > 185 s")
+plt.hist(runPlus,range(min_valueP,max_valueP))
+ax.xaxis.set_major_locator(plt.MaxNLocator())
+plt.show()
+
+
+# In[10]:
+
+
+max_valueM = max(runMinus)
+min_valueM = min(runMinus)
+ax = plt.axes()
+plt.xlabel("Run")
+plt.ylabel("Entries")
+plt.title("Distribution of Run for subrun length < 185 s")
+plt.hist(runMinus,range(min_valueM,max_valueM))
+ax.xaxis.set_major_locator(plt.MaxNLocator())
+plt.show()
+
+
+# In[16]:
+
+
+with open('/Users/cristiana/Desktop/UpMu_dq/NIGHT_files.txt','r',encoding='utf8') as txtfile1,open('/Users/cristiana/Desktop/UpMu_dq/NIGHT_files_Duplicate.txt','r',encoding='utf8') as txtfile2 :
+    runs = []
+    noruns=[]
+    file1= []
+    file2= []
+    for row1 in csv.reader(txtfile1, delimiter = ' '):
+        run1 = str(row1).split('_S')[0]
+        file1.append(run1)
+    for row2 in csv.reader(txtfile2, delimiter = ' '):
+        run2 = str(row2).split('_S')[0]
+        file2.append(run2)
+    file3 = [x for x in file1 if x not in file2]
+    for row in file3:
+        run = str(row).split('fardet_r000')[1].split('_')[0]
+        runs.append(int(run))
+    noruns= [i for i in runs if i<10]
+min_ax = min(runs)
+max_ax = max(runs)
+ax = plt.axes()
+plt.xlabel("Run")
+plt.ylabel("Entries")
+plt.title("Distribution of Runs")
+plt.hist(runs, range(min_ax, max_ax))
+ax.xaxis.set_major_locator(plt.MaxNLocator())
+plt.show()
+
